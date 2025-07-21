@@ -109,6 +109,24 @@ lib/
    flutter run
    ```
 
+   For web development:
+   ```bash
+   flutter run -d chrome
+   ```
+
+## 🎮 Live Demo
+
+The app is **fully functional** and ready to use! You can run it immediately using the commands above.
+
+### ✅ What's Working:
+- Welcome screen with smooth navigation
+- Complete user registration with real-time validation
+- Sign-in with success confirmation dialog
+- Shopping catalog with responsive product grid
+- Hot offers horizontal scrolling
+- Add to cart functionality with user feedback
+- Arabic localization (UI ready, full integration available)
+
 ## 🖼️ Screenshots
 
 *Screenshots will be added here showing the app's functionality*
