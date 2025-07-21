@@ -59,12 +59,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
                           const ShoppingHomeScreen(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        );
-                      },
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            );
+                          },
                       transitionDuration: const Duration(milliseconds: 500),
                     ),
                   );
@@ -84,10 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
       appBar: AppBar(
         title: const Text(
           'Sign In',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue[700],
         iconTheme: const IconThemeData(color: Colors.white),
@@ -97,10 +95,7 @@ class _SignInScreenState extends State<SignInScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.blue[50]!,
-              Colors.blue[100]!,
-            ],
+            colors: [Colors.blue[50]!, Colors.blue[100]!],
           ),
         ),
         child: SafeArea(
@@ -120,7 +115,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  
+
                   // Email Field
                   TextFormField(
                     controller: _emailController,
@@ -137,7 +132,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  
+
                   // Password Field
                   TextFormField(
                     controller: _passwordController,
@@ -154,7 +149,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  
+
                   // Sign In Button
                   SizedBox(
                     width: double.infinity,

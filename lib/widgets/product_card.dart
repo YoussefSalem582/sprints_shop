@@ -15,9 +15,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -44,11 +42,7 @@ class ProductCard extends StatelessWidget {
                     return Container(
                       color: Colors.grey[300],
                       child: const Center(
-                        child: Icon(
-                          Icons.image,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
+                        child: Icon(Icons.image, size: 40, color: Colors.grey),
                       ),
                     );
                   },
@@ -56,7 +50,7 @@ class ProductCard extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Product Details
           Expanded(
             flex: 2,
@@ -76,7 +70,7 @@ class ProductCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   // Price and Add to Cart
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

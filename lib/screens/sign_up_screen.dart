@@ -83,12 +83,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) =>
                           const ShoppingHomeScreen(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        return FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        );
-                      },
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            );
+                          },
                       transitionDuration: const Duration(milliseconds: 500),
                     ),
                   );
@@ -108,10 +109,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       appBar: AppBar(
         title: const Text(
           'Sign Up',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue[700],
         iconTheme: const IconThemeData(color: Colors.white),
@@ -121,10 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.blue[50]!,
-              Colors.blue[100]!,
-            ],
+            colors: [Colors.blue[50]!, Colors.blue[100]!],
           ),
         ),
         child: SafeArea(
@@ -144,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  
+
                   // Full Name Field
                   TextFormField(
                     controller: _fullNameController,
@@ -160,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  
+
                   // Email Field
                   TextFormField(
                     controller: _emailController,
@@ -177,7 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  
+
                   // Password Field
                   TextFormField(
                     controller: _passwordController,
@@ -194,7 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  
+
                   // Confirm Password Field
                   TextFormField(
                     controller: _confirmPasswordController,
@@ -211,7 +206,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  
+
                   // Sign Up Button
                   SizedBox(
                     width: double.infinity,

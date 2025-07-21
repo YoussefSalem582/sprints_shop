@@ -4,10 +4,7 @@ import '../models/product.dart';
 class HotOfferItem extends StatelessWidget {
   final HotOffer offer;
 
-  const HotOfferItem({
-    super.key,
-    required this.offer,
-  });
+  const HotOfferItem({super.key, required this.offer});
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +31,7 @@ class HotOfferItem extends StatelessWidget {
             Container(
               width: 60,
               height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
@@ -46,20 +41,16 @@ class HotOfferItem extends StatelessWidget {
                     return Container(
                       color: Colors.grey[300],
                       child: const Center(
-                        child: Icon(
-                          Icons.image,
-                          size: 30,
-                          color: Colors.grey,
-                        ),
+                        child: Icon(Icons.image, size: 30, color: Colors.grey),
                       ),
                     );
                   },
                 ),
               ),
             ),
-            
+
             const SizedBox(width: 12),
-            
+
             // Offer Details
             Expanded(
               child: Column(
@@ -76,22 +67,19 @@ class HotOfferItem extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   const SizedBox(height: 4),
-                  
+
                   // Description
                   Text(
                     offer.description,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Price Section
                   Row(
                     children: [
@@ -104,9 +92,9 @@ class HotOfferItem extends StatelessWidget {
                           decoration: TextDecoration.lineThrough,
                         ),
                       ),
-                      
+
                       const SizedBox(width: 8),
-                      
+
                       // Discounted Price
                       Text(
                         offer.discountedPrice,
@@ -116,9 +104,9 @@ class HotOfferItem extends StatelessWidget {
                           color: Colors.red,
                         ),
                       ),
-                      
+
                       const Spacer(),
-                      
+
                       // Hot offer icon
                       const Icon(
                         Icons.local_fire_department,

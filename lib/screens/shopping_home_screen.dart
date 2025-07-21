@@ -12,7 +12,7 @@ class ShoppingHomeScreen extends StatefulWidget {
 
 class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
   final PageController _pageController = PageController();
-  
+
   // Sample featured products for PageView
   final List<String> featuredImages = [
     'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=200&fit=crop',
@@ -25,42 +25,48 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
     Product(
       id: '1',
       title: 'Wireless Headphones',
-      imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150&h=150&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150&h=150&fit=crop',
       price: 99.99,
       description: 'High-quality wireless headphones',
     ),
     Product(
       id: '2',
       title: 'Smart Watch',
-      imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop',
       price: 199.99,
       description: 'Latest smartwatch with health tracking',
     ),
     Product(
       id: '3',
       title: 'Laptop Bag',
-      imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=150&h=150&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=150&h=150&fit=crop',
       price: 49.99,
       description: 'Durable laptop bag for professionals',
     ),
     Product(
       id: '4',
       title: 'Coffee Mug',
-      imageUrl: 'https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=150&h=150&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?w=150&h=150&fit=crop',
       price: 15.99,
       description: 'Premium ceramic coffee mug',
     ),
     Product(
       id: '5',
       title: 'Phone Case',
-      imageUrl: 'https://images.unsplash.com/photo-1601593346740-925612772716?w=150&h=150&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1601593346740-925612772716?w=150&h=150&fit=crop',
       price: 24.99,
       description: 'Protective phone case',
     ),
     Product(
       id: '6',
       title: 'Sunglasses',
-      imageUrl: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=150&h=150&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=150&h=150&fit=crop',
       price: 79.99,
       description: 'Stylish UV protection sunglasses',
     ),
@@ -71,7 +77,8 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
     HotOffer(
       id: '1',
       title: 'Gaming Keyboard',
-      imageUrl: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=100&h=100&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=100&h=100&fit=crop',
       description: 'Mechanical gaming keyboard with RGB lighting',
       originalPrice: '\$149.99',
       discountedPrice: '\$99.99',
@@ -79,7 +86,8 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
     HotOffer(
       id: '2',
       title: 'Bluetooth Speaker',
-      imageUrl: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=100&h=100&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=100&h=100&fit=crop',
       description: 'Portable wireless speaker with premium sound',
       originalPrice: '\$79.99',
       discountedPrice: '\$49.99',
@@ -87,7 +95,8 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
     HotOffer(
       id: '3',
       title: 'Fitness Tracker',
-      imageUrl: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=100&h=100&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=100&h=100&fit=crop',
       description: 'Advanced fitness tracker with heart rate monitor',
       originalPrice: '\$199.99',
       discountedPrice: '\$129.99',
@@ -95,7 +104,8 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
     HotOffer(
       id: '4',
       title: 'Wireless Mouse',
-      imageUrl: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=100&h=100&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=100&h=100&fit=crop',
       description: 'Ergonomic wireless mouse for productivity',
       originalPrice: '\$59.99',
       discountedPrice: '\$34.99',
@@ -103,7 +113,8 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
     HotOffer(
       id: '5',
       title: 'Power Bank',
-      imageUrl: 'https://images.unsplash.com/photo-1609592352083-22ce1a7e4c2f?w=100&h=100&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1609592352083-22ce1a7e4c2f?w=100&h=100&fit=crop',
       description: 'High-capacity portable power bank',
       originalPrice: '\$39.99',
       discountedPrice: '\$24.99',
@@ -126,10 +137,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
       appBar: AppBar(
         title: const Text(
           'Our Products',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue[700],
         actions: [

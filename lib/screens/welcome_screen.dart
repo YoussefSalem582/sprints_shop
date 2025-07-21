@@ -25,10 +25,7 @@ class WelcomeScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.blue[50]!,
-              Colors.blue[100]!,
-            ],
+            colors: [Colors.blue[50]!, Colors.blue[100]!],
           ),
         ),
         child: Center(
@@ -84,9 +81,9 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Welcome text with custom styling
                 const Text(
                   'Welcome to Sprints Shop',
@@ -97,20 +94,17 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 10),
-                
+
                 const Text(
                   'Your one-stop destination for amazing products',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 60),
-                
+
                 // Sign-up button
                 SizedBox(
                   width: double.infinity,
@@ -138,9 +132,9 @@ class WelcomeScreen extends StatelessWidget {
                     child: const Text('Sign Up'),
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Sign-in button
                 SizedBox(
                   width: double.infinity,
