@@ -4,6 +4,7 @@ import '../models/product.dart';
 import '../widgets/product_card.dart';
 import '../widgets/hot_offer_item.dart';
 import '../widgets/search_delegate.dart';
+import '../widgets/notification_widgets.dart';
 import '../providers/cart_provider.dart';
 import '../providers/wishlist_provider.dart';
 import 'cart_screen.dart';
@@ -152,6 +153,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
         ),
         backgroundColor: Colors.blue[700],
         actions: [
+          const NotificationIcon(),
           IconButton(
             icon: Icon(_isSearchExpanded ? Icons.close : Icons.search),
             onPressed: () {

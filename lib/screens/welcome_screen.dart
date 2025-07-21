@@ -1,9 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/notification_provider.dart';
 import 'sign_up_screen.dart';
 import 'sign_in_screen.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize notifications when welcome screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final notificationProvider = Provider.of<NotificationProvider>(
+        context,
+        listen: false,
+      );
+      notificationProvider.loadNotifications();
+
+      // Simulate welcome notifications after a short delay
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted) {
+          notificationProvider.simulateWelcomeNotifications();
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

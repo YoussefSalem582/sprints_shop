@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../providers/order_provider.dart';
+import '../providers/notification_provider.dart';
 import '../screens/order_history_screen.dart';
 import '../widgets/loading_widgets.dart';
 
@@ -430,7 +431,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // Create order and navigate to order history
                     final cartProvider = Provider.of<CartProvider>(
                       context,
@@ -440,12 +441,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       context,
                       listen: false,
                     );
+                    final notificationProvider =
+                        Provider.of<NotificationProvider>(
+                          context,
+                          listen: false,
+                        );
 
                     // Create order from cart items
-                    orderProvider.createOrder(
+                    final order = await orderProvider.createOrder(
                       cartItems: cartProvider.items,
                       totalAmount: cartProvider.totalAmount,
                       paymentMethod: _selectedPaymentMethod,
+                    );
+
+                    // Send payment success notification
+                    await notificationProvider.sendPaymentNotification(
+                      orderId: order.id,
+                      amount: cartProvider.totalAmount,
+                      paymentMethod: _selectedPaymentMethod,
+                      isSuccess: true,
+                    );
+
+                    // Send order confirmation notification
+                    await notificationProvider.sendOrderNotification(
+                      orderId: order.id,
+                      status: 'pending',
                     );
 
                     // Clear cart

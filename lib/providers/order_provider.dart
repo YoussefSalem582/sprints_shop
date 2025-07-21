@@ -8,6 +8,9 @@ class OrderProvider with ChangeNotifier {
   List<Order> _orders = [];
   static const String _ordersKey = 'user_orders';
 
+  // Callback for sending notifications
+  Function(String, String, String)? _notificationCallback;
+
   List<Order> get orders => [..._orders];
   int get orderCount => _orders.length;
   bool get isEmpty => _orders.isEmpty;
@@ -16,6 +19,11 @@ class OrderProvider with ChangeNotifier {
       _orders.where((order) => order.isActive).toList();
   List<Order> get completedOrders =>
       _orders.where((order) => !order.isActive).toList();
+
+  // Set notification callback
+  void setNotificationCallback(Function(String, String, String) callback) {
+    _notificationCallback = callback;
+  }
 
   // Load orders from SharedPreferences
   Future<void> loadOrders() async {
@@ -96,6 +104,15 @@ class OrderProvider with ChangeNotifier {
     notifyListeners();
     await _saveOrders();
 
+    // Send notification for order creation
+    if (_notificationCallback != null) {
+      _notificationCallback!(
+        orderId,
+        'pending',
+        'Your order has been confirmed and is being processed.',
+      );
+    }
+
     // Simulate order status updates
     _simulateOrderProgress(order);
 
@@ -122,6 +139,11 @@ class OrderProvider with ChangeNotifier {
       _orders[orderIndex] = updatedOrder;
       notifyListeners();
       await _saveOrders();
+
+      // Send notification for status update
+      if (_notificationCallback != null) {
+        _notificationCallback!(orderId, newStatus, '');
+      }
     }
   }
 
