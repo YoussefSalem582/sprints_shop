@@ -6,6 +6,10 @@ import '../widgets/hot_offer_item.dart';
 import '../widgets/search_delegate.dart';
 import '../widgets/notification_widgets.dart';
 import '../widgets/localization_widgets.dart';
+import '../widgets/offline_indicator_widget.dart';
+import '../widgets/camera_service_widget.dart';
+import '../widgets/location_service_widget.dart';
+import '../widgets/notification_settings_widget.dart';
 import '../utils/responsive_helper.dart';
 import '../providers/cart_provider.dart';
 import '../providers/wishlist_provider.dart';
@@ -270,6 +274,9 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Offline Indicator
+                  const OfflineIndicatorWidget(),
+
                   // Search Section
                   if (_isSearchExpanded)
                     ProductSearchWidget(
@@ -394,9 +401,136 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
                 ],
               ),
             ),
+            floatingActionButton: _buildFloatingActionMenu(),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildFloatingActionMenu() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        FloatingActionButton(
+          heroTag: "notifications",
+          mini: true,
+          backgroundColor: Colors.purple,
+          onPressed: () {
+            _showNotificationSettings();
+          },
+          child: const Icon(Icons.notifications_outlined),
+        ),
+        const SizedBox(height: 8),
+        FloatingActionButton(
+          heroTag: "location",
+          mini: true,
+          backgroundColor: Colors.green,
+          onPressed: () {
+            _showLocationDialog();
+          },
+          child: const Icon(Icons.location_on),
+        ),
+        const SizedBox(height: 8),
+        FloatingActionButton(
+          heroTag: "camera",
+          mini: true,
+          backgroundColor: Colors.blue,
+          onPressed: () {
+            _showCameraDialog();
+          },
+          child: const Icon(Icons.camera_alt),
+        ),
+        const SizedBox(height: 8),
+        FloatingActionButton(
+          heroTag: "main",
+          backgroundColor: Colors.orange,
+          onPressed: () {
+            // Main action - could be quick add to cart or product search
+          },
+          child: const Icon(Icons.add_shopping_cart),
+        ),
+      ],
+    );
+  }
+
+  void _showNotificationSettings() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          height: 600,
+          width: 400,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Notifications',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Expanded(
+                child: SingleChildScrollView(
+                  child: NotificationSettingsWidget(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCameraDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          height: 400,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Text(
+                'Camera Service',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 16),
+              Expanded(child: CameraServiceWidget()),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLocationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          height: 300,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Text(
+                'Location Service',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 16),
+              Expanded(child: LocationServiceWidget()),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

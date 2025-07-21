@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/notification.dart';
+import '../services/notification_service.dart';
 
 class NotificationProvider with ChangeNotifier {
   List<AppNotification> _notifications = [];
@@ -236,5 +237,111 @@ class NotificationProvider with ChangeNotifier {
       type: NotificationType.offer,
       data: offerData,
     );
+  }
+
+  // Native notification support
+  bool _nativeNotificationsInitialized = false;
+  bool _hasNativePermission = false;
+
+  bool get nativeNotificationsInitialized => _nativeNotificationsInitialized;
+  bool get hasNativePermission => _hasNativePermission;
+
+  /// Initialize native notification service
+  Future<void> initializeNativeNotifications() async {
+    try {
+      await NotificationService.initialize();
+      _nativeNotificationsInitialized = true;
+
+      // Request permissions
+      _hasNativePermission = await NotificationService.requestPermissions();
+
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Failed to initialize native notifications: $e');
+      }
+    }
+  }
+
+  /// Send native notification along with in-app notification
+  Future<void> addNotificationWithNative({
+    required String title,
+    required String message,
+    NotificationType type = NotificationType.general,
+    Map<String, dynamic>? data,
+    bool sendNative = true,
+  }) async {
+    // Add to in-app notifications
+    await addNotification(
+      title: title,
+      message: message,
+      type: type,
+      data: data,
+    );
+
+    // Send native notification if enabled and permitted
+    if (sendNative && _hasNativePermission) {
+      await NotificationService.showNotification(
+        id: DateTime.now().millisecondsSinceEpoch,
+        title: title,
+        body: message,
+        payload: data != null ? json.encode(data) : null,
+      );
+    }
+  }
+
+  /// Send native order notification
+  Future<void> sendNativeOrderNotification(
+    String orderId,
+    String status,
+  ) async {
+    if (_hasNativePermission) {
+      await NotificationService.showOrderNotification(
+        orderId: orderId,
+        status: status,
+      );
+    }
+  }
+
+  /// Send native promotional notification
+  Future<void> sendNativePromotionalNotification(
+    String title,
+    String message,
+  ) async {
+    if (_hasNativePermission) {
+      await NotificationService.showPromotionalNotification(
+        title: title,
+        message: message,
+      );
+    }
+  }
+
+  /// Get native notification status
+  Future<Map<String, dynamic>> getNativeNotificationStatus() async {
+    if (!_nativeNotificationsInitialized) {
+      return {
+        'isInitialized': false,
+        'hasPermission': false,
+        'isEnabled': false,
+        'pendingCount': 0,
+      };
+    }
+
+    final isEnabled = await NotificationService.areNotificationsEnabled();
+    final pendingNotifications =
+        await NotificationService.getPendingNotifications();
+
+    return {
+      'isInitialized': _nativeNotificationsInitialized,
+      'hasPermission': _hasNativePermission,
+      'isEnabled': isEnabled,
+      'pendingCount': pendingNotifications.length,
+    };
+  }
+
+  /// Request native notification permissions
+  Future<void> requestNativePermissions() async {
+    _hasNativePermission = await NotificationService.requestPermissions();
+    notifyListeners();
   }
 }

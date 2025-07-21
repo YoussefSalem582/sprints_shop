@@ -8,8 +8,26 @@ import 'providers/wishlist_provider.dart';
 import 'providers/order_provider.dart';
 import 'providers/notification_provider.dart';
 import 'providers/localization_provider.dart';
+import 'providers/connectivity_provider.dart';
+import 'services/offline_storage_service.dart';
+import 'services/native_features_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize offline storage
+  try {
+    await OfflineStorageService.database;
+    await OfflineStorageService.clearExpiredCache();
+  } catch (e) {
+    debugPrint('Failed to initialize offline storage: $e');
+  }
+
+  // Request permissions on startup
+  if (NativeFeaturesService.isPhysicalDevice) {
+    NativeFeaturesService.requestAllPermissions();
+  }
+
   runApp(const SprintsShopApp());
 }
 
@@ -26,6 +44,7 @@ class SprintsShopApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => OrderProvider()),
         ChangeNotifierProvider(create: (ctx) => NotificationProvider()),
         ChangeNotifierProvider(create: (ctx) => LocalizationProvider()),
+        ChangeNotifierProvider(create: (ctx) => ConnectivityProvider()),
       ],
       child: Consumer2<ThemeProvider, LocalizationProvider>(
         builder: (context, themeProvider, localizationProvider, child) {

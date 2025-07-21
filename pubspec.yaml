@@ -39,6 +39,14 @@ dependencies:
   intl: ^0.20.2
   provider: ^6.1.2
   shared_preferences: ^2.2.3
+  image_picker: ^1.0.4
+  permission_handler: ^11.0.1
+  geolocator: ^10.1.0
+  connectivity_plus: ^5.0.1
+  sqflite: ^2.3.0
+  path: ^1.8.3
+  flutter_local_notifications: ^16.0.0
+  timezone: ^0.9.2
 
 dev_dependencies:
   flutter_test:
