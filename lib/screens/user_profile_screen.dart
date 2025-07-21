@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../providers/localization_provider.dart';
+import '../widgets/localization_widgets.dart';
 import 'wishlist_screen.dart';
 import 'order_history_screen.dart';
 import 'notifications_screen.dart';
@@ -90,10 +92,18 @@ class UserProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Profile Options
+            Consumer<LocalizationProvider>(
+              builder: (context, localizationProvider, child) =>
+                  _buildProfileOption(
+                    icon: Icons.language,
+                    title: 'Language',
+                    subtitle: localizationProvider.isArabic
+                        ? 'العربية'
+                        : 'English',
+                    onTap: () => _showLanguageDialog(context),
+                  ),
+            ),
+            const SizedBox(height: 20), // Profile Options
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -323,36 +333,6 @@ class UserProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showLanguageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Language'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Text('🇺🇸'),
-                title: const Text('English'),
-                trailing: const Icon(Icons.check, color: Colors.green),
-                onTap: () => Navigator.of(context).pop(),
-              ),
-              ListTile(
-                leading: const Text('🇸🇦'),
-                title: const Text('العربية'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  _showComingSoonDialog(context, 'Arabic Language Support');
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   void _showAboutDialog(BuildContext context) {
     showAboutDialog(
       context: context,
@@ -397,6 +377,54 @@ class UserProfileScreen extends StatelessWidget {
               child: const Text('Sign Out'),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Consumer<LocalizationProvider>(
+          builder: (context, localizationProvider, child) {
+            return AlertDialog(
+              title: const Text('Select Language'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.flag, color: Colors.blue),
+                    title: const Text('English'),
+                    trailing: localizationProvider.isEnglish
+                        ? const Icon(Icons.check, color: Colors.green)
+                        : null,
+                    onTap: () {
+                      localizationProvider.changeLocale(const Locale('en'));
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.flag, color: Colors.green),
+                    title: const Text('العربية'),
+                    trailing: localizationProvider.isArabic
+                        ? const Icon(Icons.check, color: Colors.green)
+                        : null,
+                    onTap: () {
+                      localizationProvider.changeLocale(const Locale('ar'));
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel'),
+                ),
+              ],
+            );
+          },
         );
       },
     );

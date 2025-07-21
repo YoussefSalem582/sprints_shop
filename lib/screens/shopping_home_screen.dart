@@ -5,8 +5,10 @@ import '../widgets/product_card.dart';
 import '../widgets/hot_offer_item.dart';
 import '../widgets/search_delegate.dart';
 import '../widgets/notification_widgets.dart';
+import '../widgets/localization_widgets.dart';
 import '../providers/cart_provider.dart';
 import '../providers/wishlist_provider.dart';
+import '../providers/localization_provider.dart';
 import 'cart_screen.dart';
 import 'user_profile_screen.dart';
 import 'wishlist_screen.dart';
@@ -145,239 +147,247 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Our Products',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.blue[700],
-        actions: [
-          const NotificationIcon(),
-          IconButton(
-            icon: Icon(_isSearchExpanded ? Icons.close : Icons.search),
-            onPressed: () {
-              setState(() {
-                _isSearchExpanded = !_isSearchExpanded;
-                if (!_isSearchExpanded) {
-                  _displayedProducts = products;
-                }
-              });
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const UserProfileScreen(),
-                ),
-              );
-            },
-          ),
-          Consumer<WishlistProvider>(
-            builder: (ctx, wishlist, child) => Stack(
-              children: [
+    return Consumer<LocalizationProvider>(
+      builder: (context, localizationProvider, child) {
+        return Directionality(
+          textDirection: localizationProvider.textDirection,
+          child: Scaffold(
+            appBar: LocalizedAppBar(
+              titleKey: 'our_products',
+              backgroundColor: Colors.blue[700],
+              actions: [
+                const NotificationIcon(),
                 IconButton(
-                  icon: const Icon(Icons.favorite, color: Colors.white),
+                  icon: Icon(_isSearchExpanded ? Icons.close : Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      _isSearchExpanded = !_isSearchExpanded;
+                      if (!_isSearchExpanded) {
+                        _displayedProducts = products;
+                      }
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.person),
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const WishlistScreen(),
+                        builder: (context) => const UserProfileScreen(),
                       ),
                     );
                   },
                 ),
-                if (wishlist.itemCount > 0)
-                  Positioned(
-                    right: 6,
-                    top: 6,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: Text(
-                        '${wishlist.itemCount}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          Consumer<CartProvider>(
-            builder: (ctx, cart, child) => Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.shopping_cart, color: Colors.white),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const CartScreen(),
-                      ),
-                    );
-                  },
-                ),
-                if (cart.itemCount > 0)
-                  Positioned(
-                    right: 6,
-                    top: 6,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: Text(
-                        '${cart.itemCount}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Search Section
-            if (_isSearchExpanded)
-              ProductSearchWidget(
-                products: products,
-                onResults: _updateDisplayedProducts,
-              ),
-
-            // Featured Products PageView
-            Container(
-              height: 200,
-              margin: const EdgeInsets.all(16),
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: featuredImages.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        featuredImages[index],
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: const Center(
-                              child: Icon(
-                                Icons.image,
-                                size: 50,
-                                color: Colors.grey,
-                              ),
+                Consumer<WishlistProvider>(
+                  builder: (ctx, wishlist, child) => Stack(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.favorite, color: Colors.white),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const WishlistScreen(),
                             ),
                           );
                         },
                       ),
-                    ),
-                  );
-                },
-              ),
-            ),
-
-            // Products Grid
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.8,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
+                      if (wishlist.itemCount > 0)
+                        Positioned(
+                          right: 6,
+                          top: 6,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            child: Text(
+                              '${wishlist.itemCount}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-                itemCount: _displayedProducts.length,
-                itemBuilder: (context, index) {
-                  return ProductCard(product: _displayedProducts[index]);
-                },
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            // Hot Offers Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.local_fire_department,
-                    color: Colors.red,
-                    size: 28,
+                Consumer<CartProvider>(
+                  builder: (ctx, cart, child) => Stack(
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const CartScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      if (cart.itemCount > 0)
+                        Positioned(
+                          right: 6,
+                          top: 6,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            child: Text(
+                              '${cart.itemCount}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Hot Offers',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[700],
+                ),
+              ],
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Search Section
+                  if (_isSearchExpanded)
+                    ProductSearchWidget(
+                      products: products,
+                      onResults: _updateDisplayedProducts,
+                    ),
+
+                  // Featured Products PageView
+                  Container(
+                    height: 200,
+                    margin: const EdgeInsets.all(16),
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: featuredImages.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              featuredImages[index],
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[300],
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.image,
+                                      size: 50,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
+
+                  // Products Grid
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.8,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                      itemCount: _displayedProducts.length,
+                      itemBuilder: (context, index) {
+                        return ProductCard(product: _displayedProducts[index]);
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // Hot Offers Section
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.local_fire_department,
+                          color: Colors.red,
+                          size: 28,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Hot Offers',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[700],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Hot Offers ListView
+                  SizedBox(
+                    height: 120,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: hotOffers.length,
+                      itemBuilder: (context, index) {
+                        return HotOfferItem(offer: hotOffers[index]);
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
-
-            const SizedBox(height: 16),
-
-            // Hot Offers ListView
-            SizedBox(
-              height: 120,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: hotOffers.length,
-                itemBuilder: (context, index) {
-                  return HotOfferItem(offer: hotOffers[index]);
-                },
-              ),
-            ),
-
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

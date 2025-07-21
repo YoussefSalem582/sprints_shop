@@ -7,6 +7,7 @@ import 'providers/theme_provider.dart';
 import 'providers/wishlist_provider.dart';
 import 'providers/order_provider.dart';
 import 'providers/notification_provider.dart';
+import 'providers/localization_provider.dart';
 
 void main() {
   runApp(const SprintsShopApp());
@@ -24,23 +25,22 @@ class SprintsShopApp extends StatelessWidget {
         ChangeNotifierProvider(create: (ctx) => WishlistProvider()),
         ChangeNotifierProvider(create: (ctx) => OrderProvider()),
         ChangeNotifierProvider(create: (ctx) => NotificationProvider()),
+        ChangeNotifierProvider(create: (ctx) => LocalizationProvider()),
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
+      child: Consumer2<ThemeProvider, LocalizationProvider>(
+        builder: (context, themeProvider, localizationProvider, child) {
           return MaterialApp(
             title: 'Sprints Shop',
             debugShowCheckedModeBanner: false,
             theme: themeProvider.currentTheme,
+            locale: localizationProvider.currentLocale,
             // Localization support
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [
-              Locale('en', ''), // English
-              Locale('ar', ''), // Arabic
-            ],
+            supportedLocales: LocalizationProvider.supportedLocales,
             home: const WelcomeScreen(),
           );
         },
