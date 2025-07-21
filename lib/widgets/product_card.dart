@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
+import '../providers/wishlist_provider.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductCard extends StatelessWidget {
@@ -29,29 +30,76 @@ class ProductCard extends StatelessWidget {
             // Product Image
             Expanded(
               flex: 3,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(12),
-                ),
-                child: Hero(
-                  tag: 'product-${product.id}',
-                  child: Image.network(
-                    product.imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey[300],
-                        child: const Center(
-                          child: Icon(
-                            Icons.image,
-                            size: 40,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      );
-                    },
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
+                    child: Hero(
+                      tag: 'product-${product.id}',
+                      child: Image.network(
+                        product.imageUrl,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(
+                                Icons.image,
+                                size: 40,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                ),
+
+                  // Wishlist button
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Consumer<WishlistProvider>(
+                      builder: (ctx, wishlist, child) => CircleAvatar(
+                        radius: 16,
+                        backgroundColor: Colors.white.withOpacity(0.9),
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(
+                            wishlist.isInWishlist(product.id)
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: wishlist.isInWishlist(product.id)
+                                ? Colors.red
+                                : Colors.grey,
+                            size: 18,
+                          ),
+                          onPressed: () {
+                            wishlist.toggleItem(product);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  wishlist.isInWishlist(product.id)
+                                      ? '${product.title} added to wishlist!'
+                                      : '${product.title} removed from wishlist!',
+                                ),
+                                duration: const Duration(seconds: 1),
+                                backgroundColor:
+                                    wishlist.isInWishlist(product.id)
+                                    ? Colors.red
+                                    : Colors.orange,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../models/product.dart';
+import 'payment_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -265,19 +266,8 @@ class CartScreen extends StatelessWidget {
   }
 
   void _proceedToCheckout(BuildContext context) {
-    // TODO: Implement checkout functionality
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Checkout'),
-        content: const Text('Checkout functionality will be implemented soon!'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const PaymentScreen()));
   }
 }

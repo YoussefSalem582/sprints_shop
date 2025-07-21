@@ -5,8 +5,10 @@ import '../widgets/product_card.dart';
 import '../widgets/hot_offer_item.dart';
 import '../widgets/search_delegate.dart';
 import '../providers/cart_provider.dart';
+import '../providers/wishlist_provider.dart';
 import 'cart_screen.dart';
 import 'user_profile_screen.dart';
+import 'wishlist_screen.dart';
 
 class ShoppingHomeScreen extends StatefulWidget {
   const ShoppingHomeScreen({super.key});
@@ -170,6 +172,47 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
                 ),
               );
             },
+          ),
+          Consumer<WishlistProvider>(
+            builder: (ctx, wishlist, child) => Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.favorite, color: Colors.white),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const WishlistScreen(),
+                      ),
+                    );
+                  },
+                ),
+                if (wishlist.itemCount > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        '${wishlist.itemCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
           Consumer<CartProvider>(
             builder: (ctx, cart, child) => Stack(

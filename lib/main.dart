@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'screens/welcome_screen.dart';
 import 'providers/cart_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/wishlist_provider.dart';
 
 void main() {
   runApp(const SprintsShopApp());
@@ -18,6 +19,7 @@ class SprintsShopApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (ctx) => CartProvider()),
         ChangeNotifierProvider(create: (ctx) => ThemeProvider()),
+        ChangeNotifierProvider(create: (ctx) => WishlistProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

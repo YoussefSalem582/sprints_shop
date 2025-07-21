@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../providers/wishlist_provider.dart';
+import 'wishlist_screen.dart';
 
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({super.key});
@@ -108,7 +110,13 @@ class UserProfileScreen extends StatelessWidget {
                     icon: Icons.favorite,
                     title: 'Wishlist',
                     subtitle: 'Your favorite items',
-                    onTap: () => _showComingSoonDialog(context, 'Wishlist'),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const WishlistScreen(),
+                        ),
+                      );
+                    },
                   ),
                   _buildProfileOption(
                     icon: Icons.location_on,
