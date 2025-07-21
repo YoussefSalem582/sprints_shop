@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
-import '../providers/wishlist_provider.dart';
 import 'wishlist_screen.dart';
+import 'order_history_screen.dart';
 
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({super.key});
@@ -103,8 +103,13 @@ class UserProfileScreen extends StatelessWidget {
                     icon: Icons.shopping_bag,
                     title: 'Order History',
                     subtitle: 'View your past orders',
-                    onTap: () =>
-                        _showComingSoonDialog(context, 'Order History'),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const OrderHistoryScreen(),
+                        ),
+                      );
+                    },
                   ),
                   _buildProfileOption(
                     icon: Icons.favorite,

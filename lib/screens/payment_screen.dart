@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
+import '../providers/order_provider.dart';
+import '../screens/order_history_screen.dart';
 import '../widgets/loading_widgets.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -429,11 +431,42 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Clear cart and navigate back to home
-                    Provider.of<CartProvider>(
+                    // Create order and navigate to order history
+                    final cartProvider = Provider.of<CartProvider>(
                       context,
                       listen: false,
-                    ).clearCart();
+                    );
+                    final orderProvider = Provider.of<OrderProvider>(
+                      context,
+                      listen: false,
+                    );
+
+                    // Create order from cart items
+                    orderProvider.createOrder(
+                      cartItems: cartProvider.items,
+                      totalAmount: cartProvider.totalAmount,
+                      paymentMethod: _selectedPaymentMethod,
+                    );
+
+                    // Clear cart
+                    cartProvider.clearCart();
+
+                    // Navigate to order history
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const OrderHistoryScreen(),
+                      ),
+                      (route) => route.isFirst,
+                    );
+                  },
+                  child: const Text('View Order History'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () {
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                   child: const Text('Continue Shopping'),
