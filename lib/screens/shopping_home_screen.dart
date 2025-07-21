@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../widgets/product_card.dart';
 import '../widgets/hot_offer_item.dart';
+import '../providers/cart_provider.dart';
+import 'cart_screen.dart';
 
 class ShoppingHomeScreen extends StatefulWidget {
   const ShoppingHomeScreen({super.key});
@@ -121,16 +124,6 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
     ),
   ];
 
-  void _addToCart(Product product) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${product.title} added to cart'),
-        duration: const Duration(seconds: 2),
-        backgroundColor: Colors.green,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,11 +134,46 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
         ),
         backgroundColor: Colors.blue[700],
         actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart, color: Colors.white),
-            onPressed: () {
-              // Cart functionality can be added here
-            },
+          Consumer<CartProvider>(
+            builder: (ctx, cart, child) => Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.shopping_cart, color: Colors.white),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CartScreen(),
+                      ),
+                    );
+                  },
+                ),
+                if (cart.itemCount > 0)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        '${cart.itemCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),
@@ -214,7 +242,6 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
                 itemBuilder: (context, index) {
                   return ProductCard(
                     product: products[index],
-                    onAddToCart: () => _addToCart(products[index]),
                   );
                 },
               ),
