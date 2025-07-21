@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
+import '../utils/responsive_helper.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -54,7 +55,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         slivers: [
           // Sliver App Bar with Product Image
           SliverAppBar(
-            expandedHeight: 300,
+            expandedHeight: ResponsiveHelper.responsive(
+              context,
+              mobile: 250.0,
+              tablet: 350.0,
+              desktop: 400.0,
+            ),
             pinned: true,
             backgroundColor: Colors.blue[700],
             iconTheme: const IconThemeData(color: Colors.white),
@@ -84,15 +90,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
               child: SlideTransition(
                 position: _slideAnimation,
                 child: Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: ResponsiveHelper.responsivePadding(context),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Product Title
                       Text(
                         widget.product.title,
-                        style: const TextStyle(
-                          fontSize: 28,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.getTextSize(context, 28),
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
                         ),

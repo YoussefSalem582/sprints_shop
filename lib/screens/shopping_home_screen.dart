@@ -6,6 +6,7 @@ import '../widgets/hot_offer_item.dart';
 import '../widgets/search_delegate.dart';
 import '../widgets/notification_widgets.dart';
 import '../widgets/localization_widgets.dart';
+import '../utils/responsive_helper.dart';
 import '../providers/cart_provider.dart';
 import '../providers/wishlist_provider.dart';
 import '../providers/localization_provider.dart';
@@ -278,8 +279,13 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
 
                   // Featured Products PageView
                   Container(
-                    height: 200,
-                    margin: const EdgeInsets.all(16),
+                    height: ResponsiveHelper.responsive(
+                      context,
+                      mobile: 200.0,
+                      tablet: 250.0,
+                      desktop: 300.0,
+                    ),
+                    margin: ResponsiveHelper.responsivePadding(context),
                     child: PageView.builder(
                       controller: _pageController,
                       itemCount: featuredImages.length,
@@ -323,17 +329,20 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
 
                   // Products Grid
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: ResponsiveHelper.responsivePadding(context),
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.8,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: ResponsiveHelper.getGridColumns(
+                          context,
+                        ),
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: ResponsiveHelper.isMobile(context)
+                            ? 0.8
+                            : 0.9,
+                      ),
                       itemCount: _displayedProducts.length,
                       itemBuilder: (context, index) {
                         return ProductCard(product: _displayedProducts[index]);
