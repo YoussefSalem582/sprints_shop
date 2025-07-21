@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../widgets/product_card.dart';
 import '../widgets/hot_offer_item.dart';
+import '../widgets/search_delegate.dart';
 import '../providers/cart_provider.dart';
 import 'cart_screen.dart';
+import 'user_profile_screen.dart';
 
 class ShoppingHomeScreen extends StatefulWidget {
   const ShoppingHomeScreen({super.key});
@@ -15,6 +17,20 @@ class ShoppingHomeScreen extends StatefulWidget {
 
 class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
   final PageController _pageController = PageController();
+  List<Product> _displayedProducts = [];
+  bool _isSearchExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _displayedProducts = products;
+  }
+
+  void _updateDisplayedProducts(List<Product> filteredProducts) {
+    setState(() {
+      _displayedProducts = filteredProducts;
+    });
+  }
 
   // Sample featured products for PageView
   final List<String> featuredImages = [
@@ -134,6 +150,27 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
         ),
         backgroundColor: Colors.blue[700],
         actions: [
+          IconButton(
+            icon: Icon(_isSearchExpanded ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                _isSearchExpanded = !_isSearchExpanded;
+                if (!_isSearchExpanded) {
+                  _displayedProducts = products;
+                }
+              });
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const UserProfileScreen(),
+                ),
+              );
+            },
+          ),
           Consumer<CartProvider>(
             builder: (ctx, cart, child) => Stack(
               children: [
@@ -181,6 +218,13 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Search Section
+            if (_isSearchExpanded)
+              ProductSearchWidget(
+                products: products,
+                onResults: _updateDisplayedProducts,
+              ),
+
             // Featured Products PageView
             Container(
               height: 200,
@@ -238,11 +282,9 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: products.length,
+                itemCount: _displayedProducts.length,
                 itemBuilder: (context, index) {
-                  return ProductCard(
-                    product: products[index],
-                  );
+                  return ProductCard(product: _displayedProducts[index]);
                 },
               ),
             ),

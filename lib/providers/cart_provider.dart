@@ -14,7 +14,8 @@ class CartProvider with ChangeNotifier {
 
   int get totalQuantity => _items.fold(0, (sum, item) => sum + item.quantity);
 
-  double get totalAmount => _items.fold(0.0, (sum, item) => sum + item.totalPrice);
+  double get totalAmount =>
+      _items.fold(0.0, (sum, item) => sum + item.totalPrice);
 
   bool get isEmpty => _items.isEmpty;
 
@@ -23,7 +24,7 @@ class CartProvider with ChangeNotifier {
     try {
       final prefs = await SharedPreferences.getInstance();
       final cartData = prefs.getString(_cartKey);
-      
+
       if (cartData != null) {
         final List<dynamic> decodedData = json.decode(cartData);
         _items = decodedData.map((item) => CartItem.fromJson(item)).toList();
@@ -40,7 +41,9 @@ class CartProvider with ChangeNotifier {
   Future<void> _saveCart() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final cartData = json.encode(_items.map((item) => item.toJson()).toList());
+      final cartData = json.encode(
+        _items.map((item) => item.toJson()).toList(),
+      );
       await prefs.setString(_cartKey, cartData);
     } catch (error) {
       if (kDebugMode) {
@@ -51,23 +54,27 @@ class CartProvider with ChangeNotifier {
 
   // Add item to cart
   void addItem(Product product) {
-    final existingIndex = _items.indexWhere((item) => item.productId == product.id);
-    
+    final existingIndex = _items.indexWhere(
+      (item) => item.productId == product.id,
+    );
+
     if (existingIndex >= 0) {
       // Item already exists, increase quantity
       _items[existingIndex].quantity++;
     } else {
       // Add new item
-      _items.add(CartItem(
-        id: DateTime.now().toString(),
-        productId: product.id,
-        title: product.title,
-        imageUrl: product.imageUrl,
-        price: product.price,
-        quantity: 1,
-      ));
+      _items.add(
+        CartItem(
+          id: DateTime.now().toString(),
+          productId: product.id,
+          title: product.title,
+          imageUrl: product.imageUrl,
+          price: product.price,
+          quantity: 1,
+        ),
+      );
     }
-    
+
     notifyListeners();
     _saveCart();
   }
@@ -81,8 +88,10 @@ class CartProvider with ChangeNotifier {
 
   // Remove single quantity of an item
   void removeSingleItem(String productId) {
-    final existingIndex = _items.indexWhere((item) => item.productId == productId);
-    
+    final existingIndex = _items.indexWhere(
+      (item) => item.productId == productId,
+    );
+
     if (existingIndex >= 0) {
       if (_items[existingIndex].quantity > 1) {
         _items[existingIndex].quantity--;

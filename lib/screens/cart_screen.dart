@@ -9,15 +9,12 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<CartProvider>(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Shopping Cart',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Colors.blue[700],
         iconTheme: const IconThemeData(color: Colors.white),
@@ -36,11 +33,8 @@ class CartScreen extends StatelessWidget {
                 Expanded(
                   child: ListView.builder(
                     itemCount: cart.items.length,
-                    itemBuilder: (ctx, i) => _buildCartItem(
-                      context,
-                      cart.items[i],
-                      cart,
-                    ),
+                    itemBuilder: (ctx, i) =>
+                        _buildCartItem(context, cart.items[i], cart),
                   ),
                 ),
                 _buildCartSummary(context, cart),
@@ -71,10 +65,7 @@ class CartScreen extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             'Add some products to get started!',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[500],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[500]),
           ),
         ],
       ),
@@ -109,7 +100,10 @@ class CartScreen extends StatelessWidget {
                     color: Colors.red,
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(5),
@@ -182,10 +176,7 @@ class CartScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Total Items:',
-                style: TextStyle(fontSize: 16),
-              ),
+              const Text('Total Items:', style: TextStyle(fontSize: 16)),
               Text(
                 '${cart.totalQuantity}',
                 style: const TextStyle(
@@ -201,10 +192,7 @@ class CartScreen extends StatelessWidget {
             children: [
               const Text(
                 'Total Amount:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
                 '\$${cart.totalAmount.toStringAsFixed(2)}',
@@ -220,7 +208,9 @@ class CartScreen extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: cart.isEmpty ? null : () => _proceedToCheckout(context),
+              onPressed: cart.isEmpty
+                  ? null
+                  : () => _proceedToCheckout(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue[700],
                 padding: const EdgeInsets.symmetric(vertical: 15),
@@ -248,7 +238,9 @@ class CartScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Clear Cart'),
-        content: const Text('Are you sure you want to remove all items from your cart?'),
+        content: const Text(
+          'Are you sure you want to remove all items from your cart?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
@@ -265,10 +257,7 @@ class CartScreen extends StatelessWidget {
                 ),
               );
             },
-            child: const Text(
-              'Clear',
-              style: TextStyle(color: Colors.red),
-            ),
+            child: const Text('Clear', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
