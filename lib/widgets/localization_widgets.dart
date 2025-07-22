@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/localization_provider.dart';
+import 'app_logo_widget.dart';
 import '../l10n/app_localizations_static.dart';
 
 class LocalizedText extends StatelessWidget {
@@ -145,6 +146,59 @@ class LocalizedAppBar extends StatelessWidget implements PreferredSizeWidget {
               color: Colors.white,
             ),
           ),
+          actions: [if (actions != null) ...actions!, const LanguageSelector()],
+          leading: leading,
+          backgroundColor: backgroundColor,
+          elevation: elevation,
+        );
+      },
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+/// AppBar with logo and localization support
+class LogoAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String? titleKey;
+  final List<Widget>? actions;
+  final Widget? leading;
+  final Color? backgroundColor;
+  final double elevation;
+  final bool showLogo;
+
+  const LogoAppBar({
+    super.key,
+    this.titleKey,
+    this.actions,
+    this.leading,
+    this.backgroundColor,
+    this.elevation = 0,
+    this.showLogo = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<LocalizationProvider>(
+      builder: (context, localizationProvider, child) {
+        Widget title;
+        if (showLogo) {
+          title = const AppLogoWidget.small(showText: true, textSize: 16);
+        } else if (titleKey != null) {
+          title = LocalizedText(
+            titleKey!,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          );
+        } else {
+          title = const SizedBox.shrink();
+        }
+
+        return AppBar(
+          title: title,
           actions: [if (actions != null) ...actions!, const LanguageSelector()],
           leading: leading,
           backgroundColor: backgroundColor,

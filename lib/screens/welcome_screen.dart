@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/notification_provider.dart';
 import '../providers/localization_provider.dart';
 import '../services/analytics_service.dart';
+import '../widgets/app_logo_widget.dart';
 import 'sign_up_screen.dart';
 import 'sign_in_screen.dart';
 import 'monitoring_dashboard.dart';
@@ -15,10 +16,43 @@ class WelcomeScreen extends StatefulWidget {
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _fadeController;
+  late AnimationController _slideController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
   @override
   void initState() {
     super.initState();
+
+    // Initialize animation controllers
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _slideController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeOut));
+
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
+
+    // Start animations
+    _fadeController.forward();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      _slideController.forward();
+    });
 
     // Initialize notifications when welcome screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -44,184 +78,233 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   @override
+  void dispose() {
+    _fadeController.dispose();
+    _slideController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Sprints Shop',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: Colors.blue[700],
-        centerTitle: true,
-        actions: [
-          if (kDebugMode)
-            IconButton(
-              icon: const Icon(Icons.analytics, color: Colors.white),
-              onPressed: () async {
-                await AnalyticsService().trackEvent(
-                  'monitoring_dashboard_opened',
-                  {'source': 'welcome_screen'},
-                );
-                if (mounted) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MonitoringDashboard(),
-                    ),
-                  );
-                }
-              },
-              tooltip: 'Monitoring Dashboard',
-            ),
-        ],
-      ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blue[50]!, Colors.blue[100]!],
+            colors: [Color(0xFFF8FBFF), Color(0xFFEBF4FF)],
           ),
         ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Two images in a row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // Local image placeholder
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey[300],
-                        border: Border.all(color: Colors.grey[400]!),
-                      ),
-                      child: const Icon(
-                        Icons.shopping_bag,
-                        size: 60,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    // Online image
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey[400]!),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=120&h=120&fit=crop',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey[300],
-                              child: const Icon(
-                                Icons.shopping_cart,
-                                size: 60,
-                                color: Colors.blue,
-                              ),
+        child: SafeArea(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Column(
+                children: [
+                  // Debug button (top right)
+                  if (kDebugMode)
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: IconButton(
+                          icon: Icon(Icons.analytics, color: Colors.grey[600]),
+                          onPressed: () async {
+                            await AnalyticsService().trackEvent(
+                              'monitoring_dashboard_opened',
+                              {'source': 'welcome_screen'},
                             );
+                            if (mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MonitoringDashboard(),
+                                ),
+                              );
+                            }
                           },
                         ),
                       ),
                     ),
-                  ],
-                ),
 
-                const SizedBox(height: 40),
-
-                // Welcome text with custom styling
-                const Text(
-                  'Welcome to Sprints Shop',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: 10),
-
-                const Text(
-                  'Your one-stop destination for amazing products',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: 60),
-
-                // Sign-up button
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignUpScreen(),
+                  // Main content
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Logo section
+                        SlideTransition(
+                          position: _slideAnimation,
+                          child: const AppLogoWidget.large(showText: false),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[700],
-                      foregroundColor: Colors.white,
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text('Sign Up'),
-                  ),
-                ),
 
-                const SizedBox(height: 20),
+                        const SizedBox(height: 40),
 
-                // Sign-in button
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignInScreen(),
+                        // Welcome text
+                        TweenAnimationBuilder<double>(
+                          duration: const Duration(milliseconds: 800),
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          builder: (context, value, child) {
+                            return Opacity(opacity: value, child: child);
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                'Sprints Shop',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey[800],
+                                  letterSpacing: -0.5,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Your premium shopping experience',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
-                      );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.blue[700]!, width: 2),
-                      foregroundColor: Colors.blue[700],
-                      textStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+
+                        const SizedBox(height: 80),
+
+                        // Action buttons
+                        TweenAnimationBuilder<double>(
+                          duration: const Duration(milliseconds: 1000),
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          builder: (context, value, child) {
+                            return Transform.translate(
+                              offset: Offset(0, 20 * (1 - value)),
+                              child: Opacity(opacity: value, child: child),
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              // Primary button
+                              SizedBox(
+                                width: double.infinity,
+                                height: 54,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    await AnalyticsService().trackEvent(
+                                      'sign_up_button_clicked',
+                                      {'source': 'welcome_screen'},
+                                    );
+                                    if (mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignUpScreen(),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF4C8FC3),
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Get Started',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // Secondary button
+                              SizedBox(
+                                width: double.infinity,
+                                height: 54,
+                                child: OutlinedButton(
+                                  onPressed: () async {
+                                    await AnalyticsService().trackEvent(
+                                      'sign_in_button_clicked',
+                                      {'source': 'welcome_screen'},
+                                    );
+                                    if (mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignInScreen(),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                      color: Colors.grey[300]!,
+                                      width: 1.5,
+                                    ),
+                                    foregroundColor: Colors.grey[700],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Sign In',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 24),
+
+                              // Guest access
+                              TextButton(
+                                onPressed: () async {
+                                  await AnalyticsService().trackEvent(
+                                    'guest_access_clicked',
+                                    {'source': 'welcome_screen'},
+                                  );
+                                  if (mounted) {
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      '/shopping_home',
+                                    );
+                                  }
+                                },
+                                child: Text(
+                                  'Continue as Guest',
+                                  style: TextStyle(
+                                    color: const Color(0xFF757575),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    child: const Text('Sign In'),
                   ),
-                ),
-              ],
+
+                  // Bottom spacing
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
           ),
         ),

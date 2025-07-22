@@ -74,6 +74,7 @@ flutter:
   # Assets section
   assets:
     - assets/images/
+    - assets/images/app_logo/
     - assets/fonts/
 
   # Fonts section (uncomment when font file is added)

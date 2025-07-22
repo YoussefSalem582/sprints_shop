@@ -171,7 +171,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
         return Directionality(
           textDirection: localizationProvider.textDirection,
           child: Scaffold(
-            appBar: LocalizedAppBar(
+            appBar: LogoAppBar(
               titleKey: 'our_products',
               backgroundColor: Colors.blue[700],
               actions: [
