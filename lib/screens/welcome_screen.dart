@@ -5,11 +5,13 @@ import '../providers/notification_provider.dart';
 import '../providers/localization_provider.dart';
 import '../services/analytics_service.dart';
 import '../widgets/app_logo_widget.dart';
+import '../theme/app_theme.dart';
 import '../l10n/app_localizations.dart';
 import 'sign_up_screen.dart';
 import 'sign_in_screen.dart';
 import 'monitoring_dashboard.dart';
 import 'language_test_screen.dart';
+import 'advanced_shopping_home_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -281,9 +283,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                     {'source': 'welcome_screen'},
                                   );
                                   if (mounted) {
-                                    Navigator.pushReplacementNamed(
+                                    Navigator.pushReplacement(
                                       context,
-                                      '/shopping_home',
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AdvancedShoppingHomeScreen(),
+                                      ),
                                     );
                                   }
                                 },

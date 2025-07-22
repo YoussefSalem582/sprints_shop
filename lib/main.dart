@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'screens/welcome_screen.dart';
+import 'theme/app_theme.dart';
 import 'providers/cart_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/wishlist_provider.dart';

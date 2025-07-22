@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../theme/app_theme.dart';
 
 class ThemeProvider extends ChangeNotifier {
   bool _isDarkMode = false;
@@ -7,7 +8,7 @@ class ThemeProvider extends ChangeNotifier {
 
   bool get isDarkMode => _isDarkMode;
 
-  ThemeData get currentTheme => _isDarkMode ? _darkTheme : _lightTheme;
+  ThemeData get currentTheme => _isDarkMode ? _darkTheme : AppTheme.lightTheme;
 
   ThemeData get _lightTheme => ThemeData(
     useMaterial3: true,
