@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/localization_provider.dart';
+import '../l10n/app_localizations.dart';
 import 'shopping_home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -21,34 +24,37 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   String? _validateEmail(String? value) {
+    final localizations = AppLocalizations.of(context)!;
     if (value == null || value.isEmpty) {
-      return 'Please enter your email';
+      return localizations.pleaseEnterEmail;
     }
     if (!value.contains('@')) {
-      return 'Email must include @';
+      return localizations.emailMustIncludeAt;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
+    final localizations = AppLocalizations.of(context)!;
     if (value == null || value.isEmpty) {
-      return 'Please enter your password';
+      return localizations.pleaseEnterPassword;
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return localizations.passwordMinLength;
     }
     return null;
   }
 
   void _submitForm() {
+    final localizations = AppLocalizations.of(context)!;
     if (_formKey.currentState!.validate()) {
       // Show success dialog
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Success'),
-            content: const Text('Account sign-in successfully'),
+            title: Text(localizations.success),
+            content: Text(localizations.accountSignInSuccessfully),
             actions: [
               TextButton(
                 onPressed: () {
@@ -70,7 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   );
                 },
-                child: const Text('Close'),
+                child: Text(localizations.close),
               ),
             ],
           );
@@ -81,96 +87,111 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final localizationProvider = Provider.of<LocalizationProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Sign In',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.blue[700],
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.blue[50]!, Colors.blue[100]!],
+        title: Text(
+          localizations.signIn,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Welcome Back',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-
-                  // Email Field
-                  TextFormField(
-                    controller: _emailController,
-                    validator: _validateEmail,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: const Icon(Icons.email),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
+        backgroundColor: const Color(0xFF4C8FC3),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: Directionality(
+        textDirection: localizationProvider.textDirection,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.blue[50]!, Colors.blue[100]!],
+            ),
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      localizations.welcomeBack,
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4C8FC3),
                       ),
-                      filled: true,
-                      fillColor: Colors.white,
                     ),
-                  ),
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 30),
 
-                  // Password Field
-                  TextFormField(
-                    controller: _passwordController,
-                    validator: _validatePassword,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-
-                  // Sign In Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: _submitForm,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[700],
-                        foregroundColor: Colors.white,
-                        textStyle: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        shape: RoundedRectangleBorder(
+                    // Email Field
+                    TextFormField(
+                      controller: _emailController,
+                      validator: _validateEmail,
+                      keyboardType: TextInputType.emailAddress,
+                      textDirection: localizationProvider.isArabic
+                          ? TextDirection.rtl
+                          : TextDirection.ltr,
+                      decoration: InputDecoration(
+                        labelText: localizations.email,
+                        prefixIcon: const Icon(Icons.email),
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
+                        filled: true,
+                        fillColor: Colors.white,
                       ),
-                      child: const Text('Sign In'),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+
+                    // Password Field
+                    TextFormField(
+                      controller: _passwordController,
+                      validator: _validatePassword,
+                      obscureText: true,
+                      textDirection: localizationProvider.isArabic
+                          ? TextDirection.rtl
+                          : TextDirection.ltr,
+                      decoration: InputDecoration(
+                        labelText: localizations.password,
+                        prefixIcon: const Icon(Icons.lock),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+
+                    // Sign In Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: _submitForm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF4C8FC3),
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(localizations.signIn),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

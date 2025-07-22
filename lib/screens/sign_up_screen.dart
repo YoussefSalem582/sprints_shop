@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/localization_provider.dart';
+import '../l10n/app_localizations.dart';
 import 'shopping_home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {

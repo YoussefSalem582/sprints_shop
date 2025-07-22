@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../l10n/app_localizations.dart';
 import '../providers/cart_provider.dart';
 import '../models/product.dart';
 import '../utils/responsive_helper.dart';
@@ -14,11 +15,14 @@ class CartScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Shopping Cart',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        title: Text(
+          AppLocalizations.of(context)!.cart,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
-        backgroundColor: Colors.blue[700],
+        backgroundColor: const Color(0xFF4C8FC3),
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           if (cart.itemCount > 0)

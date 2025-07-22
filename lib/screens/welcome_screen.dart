@@ -5,9 +5,11 @@ import '../providers/notification_provider.dart';
 import '../providers/localization_provider.dart';
 import '../services/analytics_service.dart';
 import '../widgets/app_logo_widget.dart';
+import '../l10n/app_localizations.dart';
 import 'sign_up_screen.dart';
 import 'sign_in_screen.dart';
 import 'monitoring_dashboard.dart';
+import 'language_test_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -152,7 +154,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           child: Column(
                             children: [
                               Text(
-                                'Sprints Shop',
+                                AppLocalizations.of(context)!.appTitle,
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.w700,
@@ -163,7 +165,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                'Your premium shopping experience',
+                                AppLocalizations.of(context)!.welcomeSubtitle,
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.grey[600],
@@ -290,6 +292,30 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   style: TextStyle(
                                     color: const Color(0xFF757575),
                                     fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // Language test button
+                              TextButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LanguageTestScreen(),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.language, size: 18),
+                                label: const Text('Test Arabic/عربي'),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: const Color(0xFF4C8FC3),
+                                  textStyle: const TextStyle(
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/localization_provider.dart';
-import '../widgets/localization_widgets.dart';
 import 'wishlist_screen.dart';
 import 'order_history_screen.dart';
 import 'notifications_screen.dart';

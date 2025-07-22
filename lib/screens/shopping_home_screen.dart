@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../l10n/app_localizations.dart';
 import '../models/product.dart';
 import '../widgets/product_card.dart';
 import '../widgets/hot_offer_item.dart';
@@ -166,6 +167,8 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Consumer<LocalizationProvider>(
       builder: (context, localizationProvider, child) {
         return Directionality(
@@ -173,7 +176,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
           child: Scaffold(
             appBar: LogoAppBar(
               titleKey: 'our_products',
-              backgroundColor: Colors.blue[700],
+              backgroundColor: const Color(0xFF4C8FC3),
               actions: [
                 const NotificationIcon(),
                 IconButton(
@@ -385,11 +388,11 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Hot Offers',
+                          localizations.hotOffers,
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue[700],
+                            color: const Color(0xFF4C8FC3),
                           ),
                         ),
                       ],
@@ -482,7 +485,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Notifications',
+                    AppLocalizations.of(context)!.notifications,
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   IconButton(
@@ -514,7 +517,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
           child: Column(
             children: [
               Text(
-                'Camera Service',
+                AppLocalizations.of(context)!.settings,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 16),
@@ -536,7 +539,7 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
           child: Column(
             children: [
               Text(
-                'Location Service',
+                AppLocalizations.of(context)!.settings,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 16),

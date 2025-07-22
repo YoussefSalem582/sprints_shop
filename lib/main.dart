@@ -14,6 +14,7 @@ import 'services/native_features_service.dart';
 import 'services/analytics_service.dart';
 import 'services/performance_service.dart';
 import 'services/crash_reporting_service.dart';
+import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -94,6 +95,7 @@ class SprintsShopApp extends StatelessWidget {
             locale: localizationProvider.currentLocale,
             // Localization support
             localizationsDelegates: const [
+              AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
