@@ -8,6 +8,7 @@ import '../services/notification_service.dart';
 class NotificationProvider with ChangeNotifier {
   List<AppNotification> _notifications = [];
   static const String _notificationsKey = 'app_notifications';
+  final NotificationService _notificationService = NotificationService();
 
   List<AppNotification> get notifications => [..._notifications];
   List<AppNotification> get unreadNotifications =>
@@ -249,11 +250,11 @@ class NotificationProvider with ChangeNotifier {
   /// Initialize native notification service
   Future<void> initializeNativeNotifications() async {
     try {
-      await NotificationService.initialize();
+      await _notificationService.initialize();
       _nativeNotificationsInitialized = true;
 
       // Request permissions
-      _hasNativePermission = await NotificationService.requestPermissions();
+      _hasNativePermission = await _notificationService.requestPermissions();
 
       notifyListeners();
     } catch (e) {
@@ -281,11 +282,11 @@ class NotificationProvider with ChangeNotifier {
 
     // Send native notification if enabled and permitted
     if (sendNative && _hasNativePermission) {
-      await NotificationService.showNotification(
+      await _notificationService.showNotification(
         id: DateTime.now().millisecondsSinceEpoch,
         title: title,
         body: message,
-        payload: data != null ? json.encode(data) : null,
+        payload: data,
       );
     }
   }
@@ -296,9 +297,11 @@ class NotificationProvider with ChangeNotifier {
     String status,
   ) async {
     if (_hasNativePermission) {
-      await NotificationService.showOrderNotification(
-        orderId: orderId,
-        status: status,
+      await _notificationService.showNotification(
+        id: DateTime.now().millisecondsSinceEpoch,
+        title: 'Order Update',
+        body: 'Order $orderId status: $status',
+        payload: {'orderId': orderId, 'status': status},
       );
     }
   }
@@ -309,9 +312,11 @@ class NotificationProvider with ChangeNotifier {
     String message,
   ) async {
     if (_hasNativePermission) {
-      await NotificationService.showPromotionalNotification(
+      await _notificationService.showNotification(
+        id: DateTime.now().millisecondsSinceEpoch,
         title: title,
-        message: message,
+        body: message,
+        payload: {'type': 'promotional'},
       );
     }
   }
@@ -327,9 +332,9 @@ class NotificationProvider with ChangeNotifier {
       };
     }
 
-    final isEnabled = await NotificationService.areNotificationsEnabled();
-    final pendingNotifications =
-        await NotificationService.getPendingNotifications();
+    final isEnabled = await _notificationService.areNotificationsEnabled();
+    final pendingNotifications = await _notificationService
+        .getPendingNotifications();
 
     return {
       'isInitialized': _nativeNotificationsInitialized,
@@ -341,7 +346,7 @@ class NotificationProvider with ChangeNotifier {
 
   /// Request native notification permissions
   Future<void> requestNativePermissions() async {
-    _hasNativePermission = await NotificationService.requestPermissions();
+    _hasNativePermission = await _notificationService.requestPermissions();
     notifyListeners();
   }
 }

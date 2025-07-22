@@ -153,8 +153,8 @@ void main() {
       await tester.pumpWidget(createTestWidget(precisionProduct));
 
       expect(find.text('Precision Product'), findsOneWidget);
-      // The exact format depends on your price formatting logic
-      expect(find.textContaining('29.99'), findsOneWidget);
+      // toStringAsFixed(2) rounds 29.999 to 30.00
+      expect(find.textContaining('30.00'), findsOneWidget);
     });
 
     testWidgets('should be tappable to navigate to details', (

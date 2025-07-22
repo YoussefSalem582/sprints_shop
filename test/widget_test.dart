@@ -15,6 +15,9 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const SprintsShopApp());
 
+    // Wait for any pending async operations and timers
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+
     // Verify that the app builds successfully
     expect(find.byType(MaterialApp), findsOneWidget);
   });

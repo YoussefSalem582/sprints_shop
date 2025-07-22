@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
 import '../providers/wishlist_provider.dart';
+import '../services/analytics_service.dart';
+import '../services/performance_service.dart';
 import '../screens/product_detail_screen.dart';
 
 class ProductCard extends StatelessWidget {
@@ -16,12 +18,25 @@ class ProductCard extends StatelessWidget {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => ProductDetailScreen(product: product),
-            ),
+        onTap: () async {
+          PerformanceService().startTiming('product_navigation');
+
+          await AnalyticsService().trackProductView(
+            productId: product.id,
+            productName: product.title,
+            price: product.price,
+            category: 'general', // Since Product model doesn't have category
           );
+
+          if (context.mounted) {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ProductDetailScreen(product: product),
+              ),
+            );
+          }
+
+          await PerformanceService().endTiming('product_navigation');
         },
         borderRadius: BorderRadius.circular(12),
         child: Column(
@@ -142,17 +157,28 @@ class ProductCard extends StatelessWidget {
                         width: double.infinity,
                         height: 32,
                         child: ElevatedButton.icon(
-                          onPressed: () {
+                          onPressed: () async {
                             cart.addItem(product);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '${product.title} added to cart!',
-                                ),
-                                duration: const Duration(seconds: 2),
-                                backgroundColor: Colors.green,
-                              ),
+
+                            // Track add to cart analytics
+                            await AnalyticsService().trackAddToCart(
+                              productId: product.id,
+                              productName: product.title,
+                              price: product.price,
+                              quantity: 1,
                             );
+
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '${product.title} added to cart!',
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
                           },
                           icon: const Icon(Icons.add_shopping_cart, size: 16),
                           label: const Text(

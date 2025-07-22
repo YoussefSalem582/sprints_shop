@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
 import 'package:sprints_shop/models/product.dart';
 import 'package:sprints_shop/models/cart_item.dart';
 import 'package:sprints_shop/providers/cart_provider.dart';
@@ -7,6 +8,11 @@ void main() {
   group('CartProvider Tests', () {
     late CartProvider cartProvider;
     late Product testProduct;
+
+    setUpAll(() async {
+      // Initialize Flutter binding for SharedPreferences
+      TestWidgetsFlutterBinding.ensureInitialized();
+    });
 
     setUp(() {
       cartProvider = CartProvider();
@@ -39,7 +45,7 @@ void main() {
       cartProvider.addItem(testProduct);
 
       expect(cartProvider.items.length, equals(1));
-      expect(cartProvider.itemCount, equals(2));
+      expect(cartProvider.totalQuantity, equals(2));
       expect(cartProvider.totalAmount, equals(59.98));
       expect(cartProvider.items.first.quantity, equals(2));
     });
@@ -61,7 +67,7 @@ void main() {
       cartProvider.addItem(testProduct); // This should increase quantity again
 
       expect(cartProvider.items.first.quantity, equals(3));
-      expect(cartProvider.itemCount, equals(3));
+      expect(cartProvider.totalQuantity, equals(3));
       expect(cartProvider.totalAmount, equals(89.97));
     });
 
@@ -109,7 +115,8 @@ void main() {
 
       // Total: (29.99 * 2) + 19.99 = 79.97
       expect(cartProvider.totalAmount, equals(79.97));
-      expect(cartProvider.itemCount, equals(3));
+      expect(cartProvider.itemCount, equals(2)); // 2 unique items
+      expect(cartProvider.totalQuantity, equals(3)); // 3 total quantity
     });
 
     test('should handle removing non-existent items gracefully', () {

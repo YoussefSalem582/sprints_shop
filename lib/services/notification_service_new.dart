@@ -40,7 +40,9 @@ class NotificationService {
     required DateTime scheduledDate,
     Map<String, dynamic>? payload,
   }) async {
-    debugPrint('Mock scheduled notification for $scheduledDate: $title - $body');
+    debugPrint(
+      'Mock scheduled notification for $scheduledDate: $title - $body',
+    );
   }
 
   /// Cancel a notification

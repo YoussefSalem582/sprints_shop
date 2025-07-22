@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import '../providers/notification_provider.dart';
 import '../providers/localization_provider.dart';
+import '../services/analytics_service.dart';
 import 'sign_up_screen.dart';
 import 'sign_in_screen.dart';
+import 'monitoring_dashboard.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -54,6 +57,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
         backgroundColor: Colors.blue[700],
         centerTitle: true,
+        actions: [
+          if (kDebugMode)
+            IconButton(
+              icon: const Icon(Icons.analytics, color: Colors.white),
+              onPressed: () async {
+                await AnalyticsService().trackEvent(
+                  'monitoring_dashboard_opened',
+                  {'source': 'welcome_screen'},
+                );
+                if (mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MonitoringDashboard(),
+                    ),
+                  );
+                }
+              },
+              tooltip: 'Monitoring Dashboard',
+            ),
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(

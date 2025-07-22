@@ -14,6 +14,8 @@ import '../utils/responsive_helper.dart';
 import '../providers/cart_provider.dart';
 import '../providers/wishlist_provider.dart';
 import '../providers/localization_provider.dart';
+import '../services/analytics_service.dart';
+import '../services/performance_service.dart';
 import 'cart_screen.dart';
 import 'user_profile_screen.dart';
 import 'wishlist_screen.dart';
@@ -34,6 +36,18 @@ class _ShoppingHomeScreenState extends State<ShoppingHomeScreen> {
   void initState() {
     super.initState();
     _displayedProducts = products;
+
+    // Track screen view and performance
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      PerformanceService().startTiming('shopping_home_load');
+
+      await AnalyticsService().trackScreenView('shopping_home', {
+        'products_count': products.length,
+        'featured_count': featuredImages.length,
+      });
+
+      await PerformanceService().endTiming('shopping_home_load');
+    });
   }
 
   void _updateDisplayedProducts(List<Product> filteredProducts) {
